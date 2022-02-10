@@ -14,13 +14,13 @@ const App = () => {
   const [currentMessage, setCurrentMessage] = useState({content: null, type: ''})
 
 
-  const initialPeopleHook = () => {
+  const fetchPeople = () => {
     requestService.getAll().then(returnedPeople => {
       setPeople(returnedPeople)
     })
   }
 
-  useEffect(initialPeopleHook, [])
+  useEffect(fetchPeople, [])
 
   const showNotification = (message) => {
     setCurrentMessage(message)
@@ -44,12 +44,10 @@ const App = () => {
             type: 'success'
           })        
         })
-        .catch(() => {
-          setNewName('')
-          setNewNumber('')
-          setPeople(people.filter(person => person.name !== oldPerson.name))
+        .catch((error) => {
+          fetchPeople()
           showNotification({
-            content: `The number for ${oldPerson.name} has already been removed from the server`,
+            content: error.response.data.error,
             type: 'error'
           })
         })
@@ -75,6 +73,12 @@ const App = () => {
             type: 'success'
           })
         })
+        .catch(error => {
+          showNotification({
+            content: error.response.data.error,
+            type: 'error'
+          })
+        });
     }
   }
 
