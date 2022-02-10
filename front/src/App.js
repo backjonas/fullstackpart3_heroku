@@ -45,7 +45,6 @@ const App = () => {
           })        
         })
         .catch((error) => {
-          fetchPeople()
           showNotification({
             content: error.response.data.error,
             type: 'error'
